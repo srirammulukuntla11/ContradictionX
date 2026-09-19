@@ -20,6 +20,17 @@ This is **not** a generic PDF summarizer or document chatbot. ContradictionX act
 
 ---
 
+## 🚀 Live Demo
+
+| Resource | Link |
+|---|---|
+| 🌐 **Live Application** | [https://contradiction-x.vercel.app/](https://contradiction-x.vercel.app/) |
+| ⚙️ **Backend API** | [https://contradictionx.onrender.com](https://contradictionx.onrender.com) |
+
+> **Try ContradictionX:** [https://contradiction-x.vercel.app/](https://contradiction-x.vercel.app/)
+
+---
+
 ## The Problem
 
 Requirements defects are among the most expensive flaws in software engineering:
