@@ -1,0 +1,21 @@
+================================================================================
+CONTRADICTIONX SAMPLE DOCUMENT 1: USER PRIVACY & ACCOUNT MANAGEMENT POLICY
+Document ID: DOC-POL-2024-V2
+Author: Product & Privacy Operations Team
+================================================================================
+
+[SECTION 1: USER REGISTRATION & ACTIVATION]
+REQ-001: All prospective users must provide a valid email address during initial registration.
+REQ-002: The system must send a one-time 6-digit confirmation code via email within 60 seconds of registration submission.
+REQ-003: User account activation must occur automatically as soon as the email confirmation code is verified.
+REQ-004: Activated users must be granted immediate access to the customer portal and profile configuration screen.
+
+[SECTION 2: USER PRIVACY & ACCOUNT DELETION]
+REQ-005: In compliance with user privacy rights, registered users must be permitted to permanently delete their account at any time via the user account settings panel.
+REQ-006: Upon receiving a confirmed account deletion request, the system must immediately and permanently purge all user records, transaction histories, and associated stored personal data within 60 seconds without delay.
+REQ-007: Following account deletion, no user records or telemetry identifiable to the deleted account shall be retained on any active or backup storage systems.
+
+[SECTION 3: SYSTEM PERFORMANCE & AVAILABILITY]
+REQ-008: The search interface and analytics dashboard should respond quickly under normal system workloads.
+REQ-009: The application should be highly secure against unauthorized intrusions and provide intuitive access controls.
+REQ-010: Users should receive email notifications regarding system updates regularly.

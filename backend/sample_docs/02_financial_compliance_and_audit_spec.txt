@@ -1,0 +1,19 @@
+================================================================================
+CONTRADICTIONX SAMPLE DOCUMENT 2: FINANCIAL COMPLIANCE & AUDIT SPECIFICATION
+Document ID: DOC-AUD-2024-REG
+Author: Corporate Legal & Regulatory Compliance Division
+================================================================================
+
+[SECTION 1: STATUTORY AUDIT & DATA RETENTION]
+REQ-101: The system must log every state-changing API request, monetary transfer, and authorization grant in an append-only audit ledger.
+REQ-102: All ledger entries must store the initiating user identity, IP address, timestamp, affected resource, and cryptographic signature.
+REQ-103: In accordance with statutory banking regulations and financial anti-fraud requirements, all financial transactions, customer transaction histories, payment invoices, and monetary audit logs must be permanently retained for a minimum mandatory period of seven (7) years.
+REQ-104: Under no circumstances may transaction history records, customer ledger references, or financial audit trails be deleted, purged, or truncated prior to the expiration of the statutory seven-year retention window.
+
+[SECTION 2: AUTHENTICATION & ACCESS CONTROL]
+REQ-105: Administrative functions and financial transfers exceeding $1,000 require two-factor authentication (2FA).
+REQ-106: Session tokens must be securely stored and authenticated for all sensitive transactions.
+REQ-107: Security audit logs must be reviewed by the compliance officer on an ongoing periodic basis.
+
+[SECTION 3: SYSTEM NOTIFICATIONS]
+REQ-108: Users must be immediately notified of any password reset or high-value monetary transaction via SMS or push alert within 15 seconds.
