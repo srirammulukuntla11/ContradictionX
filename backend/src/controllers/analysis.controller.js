@@ -2,6 +2,7 @@ import { extractAllDocuments } from '../services/extractor.service.js';
 import { runGeminiAnalysis, generateSampleAnalysisFallback } from '../services/gemini.service.js';
 import { Analysis } from '../models/Analysis.js';
 import { AppError } from '../utils/AppError.js';
+import { SUPPORTED_MODELS, DEFAULT_MODEL, isValidModel } from '../config/models.js';
 
 /**
  * Standard REST API: Analyze uploaded requirement documents
@@ -16,11 +17,24 @@ export const analyzeDocuments = async (req, res, next) => {
     const customApiKey = req.body.apiKey || null;
     const title = req.body.title || `Analysis: ${files.map(f => f.originalname).join(' vs ')}`;
 
+    // Validate selected Gemini model against server allowlist
+    let selectedModel = process.env.GEMINI_MODEL || DEFAULT_MODEL;
+    if (req.body.model) {
+      const requestedModel = req.body.model.trim();
+      if (!isValidModel(requestedModel)) {
+        throw new AppError(
+          `Invalid Gemini model selected: "${requestedModel}". Supported models are: ${SUPPORTED_MODELS.join(', ')}.`,
+          400
+        );
+      }
+      selectedModel = requestedModel;
+    }
+
     // 1. Extract text and page structures
     const extractedDocs = await extractAllDocuments(files);
 
     // 2. Run Gemini Analysis with schema validation
-    const analysisResult = await runGeminiAnalysis(extractedDocs, customApiKey);
+    const analysisResult = await runGeminiAnalysis(extractedDocs, customApiKey, null, selectedModel);
 
     // 3. Persist to MongoDB
     let savedAnalysis = null;
@@ -28,6 +42,7 @@ export const analyzeDocuments = async (req, res, next) => {
       savedAnalysis = await Analysis.create({
         title,
         status: 'completed',
+        model: selectedModel,
         documents: extractedDocs.map(d => ({
           id: d.id,
           name: d.name,
@@ -50,6 +65,7 @@ export const analyzeDocuments = async (req, res, next) => {
         _id: `temp_${Date.now()}`,
         title,
         status: 'completed',
+        model: selectedModel,
         documents: extractedDocs,
         ...analysisResult,
         createdAt: new Date().toISOString()
@@ -89,6 +105,20 @@ export const streamAnalyzeDocuments = async (req, res) => {
     const customApiKey = req.body.apiKey || null;
     const title = req.body.title || `Analysis: ${files.map(f => f.originalname).join(' vs ')}`;
 
+    // Validate selected Gemini model against server allowlist
+    let selectedModel = process.env.GEMINI_MODEL || DEFAULT_MODEL;
+    if (req.body.model) {
+      const requestedModel = req.body.model.trim();
+      if (!isValidModel(requestedModel)) {
+        sendEvent('error', {
+          message: `Invalid Gemini model selected: "${requestedModel}". Supported models are: ${SUPPORTED_MODELS.join(', ')}.`,
+          statusCode: 400
+        });
+        return res.end();
+      }
+      selectedModel = requestedModel;
+    }
+
     // Stage 1: Upload confirmed
     sendEvent('progress', { stage: 'upload', message: 'Documents received and buffered in memory.', percent: 15 });
 
@@ -97,11 +127,11 @@ export const streamAnalyzeDocuments = async (req, res) => {
     const extractedDocs = await extractAllDocuments(files);
 
     // Stage 3: Requirements extraction & Gemini reasoning
-    sendEvent('progress', { stage: 'gemini_prompt', message: 'Submitting requirements to Gemini reasoning engine...', percent: 55 });
+    sendEvent('progress', { stage: 'gemini_prompt', message: `Submitting requirements to ${selectedModel} reasoning engine...`, percent: 55 });
     
     const analysisResult = await runGeminiAnalysis(extractedDocs, customApiKey, (stage, msg) => {
       sendEvent('progress', { stage, message: msg, percent: 75 });
-    });
+    }, selectedModel);
 
     // Stage 4: Validation
     sendEvent('progress', { stage: 'validation', message: 'Validating structured intelligence output and references...', percent: 88 });
@@ -114,6 +144,7 @@ export const streamAnalyzeDocuments = async (req, res) => {
       savedAnalysis = await Analysis.create({
         title,
         status: 'completed',
+        model: selectedModel,
         documents: extractedDocs.map(d => ({
           id: d.id,
           name: d.name,
@@ -135,6 +166,7 @@ export const streamAnalyzeDocuments = async (req, res) => {
         _id: `temp_${Date.now()}`,
         title,
         status: 'completed',
+        model: selectedModel,
         documents: extractedDocs,
         ...analysisResult,
         createdAt: new Date().toISOString()
@@ -186,7 +218,7 @@ export const getAnalysisById = async (req, res, next) => {
 export const listAnalyses = async (req, res, next) => {
   try {
     const analyses = await Analysis.find()
-      .select('title documents summary createdAt updatedAt status')
+      .select('title model documents summary createdAt updatedAt status')
       .sort({ createdAt: -1 })
       .limit(50);
 
@@ -252,6 +284,7 @@ export const createSampleDemoAnalysis = async (req, res, next) => {
       saved = await Analysis.create({
         title: 'Demo: User Policy vs Regulatory Compliance',
         status: 'completed',
+        model: DEFAULT_MODEL,
         documents: sampleDocs,
         requirements: fallbackAnalysis.requirements,
         contradictions: fallbackAnalysis.contradictions,
@@ -265,6 +298,7 @@ export const createSampleDemoAnalysis = async (req, res, next) => {
         _id: `demo_${Date.now()}`,
         title: 'Demo: User Policy vs Regulatory Compliance',
         status: 'completed',
+        model: DEFAULT_MODEL,
         documents: sampleDocs,
         ...fallbackAnalysis,
         createdAt: new Date().toISOString()

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
-import { FileText, Calendar, ArrowLeft, RefreshCw, Network, Layers, AlertTriangle } from 'lucide-react';
+import { FileText, Calendar, ArrowLeft, RefreshCw, Network, Layers, AlertTriangle, Cpu } from 'lucide-react';
 import StatsOverview from '../components/dashboard/StatsOverview';
 import FilterBar from '../components/dashboard/FilterBar';
 import IssueCard from '../components/dashboard/IssueCard';
@@ -65,6 +65,7 @@ export default function DashboardPage() {
 
   const {
     title,
+    model,
     createdAt,
     documents = [],
     requirements = [],
@@ -146,6 +147,26 @@ export default function DashboardPage() {
             <FileText size={14} />
             {documents.length} Documents Analyzed
           </span>
+          {model && (
+            <>
+              <span>•</span>
+              <span style={{
+                display: 'inline-flex',
+                alignItems: 'center',
+                gap: '0.35rem',
+                padding: '0.15rem 0.5rem',
+                borderRadius: '6px',
+                background: 'rgba(99, 102, 241, 0.1)',
+                border: '1px solid rgba(99, 102, 241, 0.25)',
+                color: 'var(--accent-light)',
+                fontWeight: 500,
+                fontSize: '0.8rem'
+              }}>
+                <Cpu size={12} />
+                {model}
+              </span>
+            </>
+          )}
         </div>
       </div>
 

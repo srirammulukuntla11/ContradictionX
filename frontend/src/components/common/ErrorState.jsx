@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, RotateCcw, KeyRound, Clock, ServerCrash, WifiOff, AlertCircle } from 'lucide-react';
+import { AlertTriangle, RotateCcw, KeyRound, Clock, ServerCrash, WifiOff, AlertCircle, Cpu } from 'lucide-react';
 import { parseUserFacingError } from '../../utils/errorParser';
 
 export default function ErrorState({ title, message, technicalDetail, error, onRetry }) {
@@ -19,6 +19,9 @@ export default function ErrorState({ title, message, technicalDetail, error, onR
         return <Clock size={24} color="#f59e0b" />;
       case 'unavailable':
         return <ServerCrash size={24} color="#f59e0b" />;
+      case 'model_unavailable':
+      case 'invalid_model':
+        return <Cpu size={24} color="#f59e0b" />;
       case 'connection':
         return <WifiOff size={24} color="#ef4444" />;
       default:
@@ -31,6 +34,8 @@ export default function ErrorState({ title, message, technicalDetail, error, onR
       case 'invalid_key':
       case 'rate_limit':
       case 'unavailable':
+      case 'model_unavailable':
+      case 'invalid_model':
         return 'rgba(245, 158, 11, 0.15)';
       default:
         return 'rgba(239, 68, 68, 0.15)';
@@ -42,6 +47,8 @@ export default function ErrorState({ title, message, technicalDetail, error, onR
       case 'invalid_key':
       case 'rate_limit':
       case 'unavailable':
+      case 'model_unavailable':
+      case 'invalid_model':
         return '1px solid rgba(245, 158, 11, 0.3)';
       default:
         return '1px solid rgba(239, 68, 68, 0.3)';

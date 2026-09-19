@@ -80,6 +80,33 @@ export function parseUserFacingError(err) {
     };
   }
 
+  // MODEL UNAVAILABLE — HTTP 404
+  const isModelUnavailable =
+    status === 404 ||
+    lower.includes('model is unavailable') ||
+    lower.includes('model not found') ||
+    lower.includes('choose another model') ||
+    (lower.includes('model') && (lower.includes('404') || lower.includes('not found') || lower.includes('unavailable')));
+
+  if (isModelUnavailable) {
+    return {
+      title: 'Gemini Model Unavailable',
+      message: 'Selected Gemini model is unavailable for this API project. Please choose another model.',
+      technicalDetail: 'Error: Model unavailable (404)',
+      category: 'model_unavailable'
+    };
+  }
+
+  // INVALID MODEL SELECTED — HTTP 400
+  if (lower.includes('invalid gemini model selected')) {
+    return {
+      title: 'Invalid Model Selected',
+      message: rawMessage.split('\n')[0],
+      technicalDetail: 'Error: Invalid model (400)',
+      category: 'invalid_model'
+    };
+  }
+
   // 5. GENERAL NETWORK / SERVER CONNECTION ERROR
   const isConnectionError =
     status === 0 ||

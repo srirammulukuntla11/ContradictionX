@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { History as HistoryIcon, Calendar, FileText, Trash2, ArrowRight, AlertTriangle, Layers, Plus } from 'lucide-react';
+import { History as HistoryIcon, Calendar, FileText, Trash2, ArrowRight, AlertTriangle, Layers, Plus, Cpu } from 'lucide-react';
 import LoadingState from '../components/common/AnalysisProgress';
 import EmptyState from '../components/common/EmptyState';
 import ErrorState from '../components/common/ErrorState';
@@ -152,6 +152,20 @@ export default function HistoryPage() {
                       <FileText size={13} color="var(--accent-light)" />
                       {docCount} {docCount === 1 ? 'document' : 'documents'}
                     </span>
+                    {item.model && (
+                      <>
+                        <span>•</span>
+                        <span style={{
+                          display: 'inline-flex',
+                          alignItems: 'center',
+                          gap: '0.3rem',
+                          color: 'var(--accent-light)'
+                        }}>
+                          <Cpu size={12} />
+                          {item.model}
+                        </span>
+                      </>
+                    )}
                   </div>
                 </div>
 

@@ -75,6 +75,10 @@ const AnalysisSchema = new mongoose.Schema({
     enum: ['pending', 'processing', 'completed', 'failed'],
     default: 'completed'
   },
+  model: {
+    type: String,
+    default: 'gemini-3.8-flash'
+  },
   documents: [DocumentSchema],
   requirements: [RequirementSchema],
   contradictions: [ContradictionSchema],

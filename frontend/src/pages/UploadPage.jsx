@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { Zap, Key, FileCheck, Sparkles, AlertCircle, FileText } from 'lucide-react';
+import { Zap, Key, FileCheck, Sparkles, AlertCircle, FileText, Cpu } from 'lucide-react';
 import Dropzone from '../components/upload/Dropzone';
 import FileList from '../components/upload/FileList';
 import AnalysisProgress from '../components/common/AnalysisProgress';
@@ -44,6 +44,7 @@ export default function UploadPage() {
   const navigate = useNavigate();
   const [files, setFiles] = useState([]);
   const [title, setTitle] = useState('');
+  const [selectedModel, setSelectedModel] = useState('gemini-3.8-flash');
   const [apiKey, setApiKey] = useState('');
   const [showApiKeyField, setShowApiKeyField] = useState(false);
 
@@ -83,6 +84,7 @@ export default function UploadPage() {
     files.forEach(f => formData.append('documents', f));
 
     if (title.trim()) formData.append('title', title.trim());
+    if (selectedModel) formData.append('model', selectedModel);
     if (apiKey.trim()) formData.append('apiKey', apiKey.trim());
 
     try {
@@ -206,6 +208,49 @@ export default function UploadPage() {
                 fontSize: '0.95rem'
               }}
             />
+          </div>
+
+          {/* Gemini Model Selection */}
+          <div>
+            <label
+              htmlFor="gemini-model-select"
+              style={{
+                display: 'flex',
+                alignItems: 'center',
+                gap: '0.4rem',
+                fontSize: '0.85rem',
+                fontWeight: 600,
+                color: 'var(--text-secondary)',
+                marginBottom: '0.4rem'
+              }}
+            >
+              <Cpu size={14} color="var(--accent-light)" />
+              <span>Gemini Model</span>
+            </label>
+            <select
+              id="gemini-model-select"
+              value={selectedModel}
+              onChange={(e) => setSelectedModel(e.target.value)}
+              style={{
+                width: '100%',
+                padding: '0.75rem 1rem',
+                borderRadius: '8px',
+                background: 'var(--bg-surface-elevated)',
+                border: '1px solid var(--border-medium)',
+                color: 'var(--text-primary)',
+                fontSize: '0.95rem',
+                cursor: 'pointer'
+              }}
+            >
+              <option value="gemini-3.8-flash">Gemini 3.8 Flash</option>
+              <option value="gemini-3.7-flash">Gemini 3.7 Flash</option>
+              <option value="gemini-3.6-flash">Gemini 3.6 Flash</option>
+              <option value="gemini-3.5-flash">Gemini 3.5 Flash</option>
+              <option value="gemini-3.5-flash-lite">Gemini 3.5 Flash-Lite</option>
+            </select>
+            <span style={{ fontSize: '0.75rem', color: 'var(--text-muted)', display: 'block', marginTop: '0.35rem' }}>
+              Model availability and limits depend on your Gemini API project.
+            </span>
           </div>
 
           {/* Optional Gemini API Key override */}

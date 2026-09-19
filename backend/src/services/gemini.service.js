@@ -229,7 +229,7 @@ export function generateSampleAnalysisFallback(documents) {
 /**
  * Execute requirements intelligence analysis with Gemini
  */
-export const runGeminiAnalysis = async (documents, apiKeyOverride = null, onProgress = null) => {
+export const runGeminiAnalysis = async (documents, apiKeyOverride = null, onProgress = null, modelOverride = null) => {
   if (onProgress) onProgress('preparing_prompt', 'Formulating requirements analysis prompt...');
 
   const client = getGeminiClient(apiKeyOverride);
@@ -241,8 +241,8 @@ export const runGeminiAnalysis = async (documents, apiKeyOverride = null, onProg
     );
   }
 
-  // Configurable Gemini model (default: gemini-3.8-flash)
-  const modelName = process.env.GEMINI_MODEL || 'gemini-3.8-flash';
+  // Configurable Gemini model (user selected override, or environment variable, or default: gemini-3.8-flash)
+  const modelName = modelOverride || process.env.GEMINI_MODEL || 'gemini-3.8-flash';
   let lastError = null;
   const MAX_ATTEMPTS = 3;
 
@@ -314,6 +314,13 @@ export const runGeminiAnalysis = async (documents, apiKeyOverride = null, onProg
     throw new AppError(
       `Google Gemini rate limit or quota exceeded (HTTP 429). Please wait before submitting another analysis request.`,
       429
+    );
+  }
+
+  if (lastError?.status === 404 || lastError?.message?.includes('404') || lastError?.message?.includes('not found')) {
+    throw new AppError(
+      `Selected Gemini model is unavailable for this API project. Please choose another model.`,
+      404
     );
   }
 
