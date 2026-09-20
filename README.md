@@ -18,9 +18,6 @@
 |---|---|
 | 🌐 **Live Application** | [https://contradiction-x.vercel.app/](https://contradiction-x.vercel.app/) |
 | ⚙️ **Backend API** | [https://contradictionx.onrender.com](https://contradictionx.onrender.com) |
-| 💻 **GitHub Repository** | [https://github.com/srirammulukuntla11/ContradictionX](https://github.com/srirammulukuntla11/ContradictionX) |
-
-> **Try ContradictionX:** [https://contradiction-x.vercel.app/](https://contradiction-x.vercel.app/)
 
 ---
 
@@ -214,5 +211,4 @@ This project is licensed under the [MIT License](LICENSE).
 ## 👨‍💻 Author
 
 **Sriram Mulukuntla**
-- GitHub: [https://github.com/srirammulukuntla11](https://github.com/srirammulukuntla11)
-- Repository: [https://github.com/srirammulukuntla11/ContradictionX](https://github.com/srirammulukuntla11/ContradictionX)
+
